@@ -1,97 +1,273 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# PoseTracker React Native CLI
 
-# Getting Started
+This is a React Native CLI project for integrating the [PoseTracker API](https://posetracker.com) to track exercises and count repetitions in real-time.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## Features
 
-## Step 1: Start Metro
+- ✅ Real-time pose tracking
+- ✅ Exercise repetition counter
+- ✅ Posture feedback and placement guidance
+- ✅ WebView-based camera integration
+- ✅ Works on iOS and Android
+- ✅ TypeScript support
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+## Prerequisites
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+Before you begin, ensure you have the following installed:
 
-```sh
-# Using npm
-npm start
+- Node.js (>= 20)
+- React Native development environment set up
+  - For Android: Android Studio, Android SDK
+  - For iOS: Xcode (macOS only)
+- PoseTracker API key from [posetracker.com](https://posetracker.com)
 
-# OR using Yarn
-yarn start
+## Installation
+
+1. **Install dependencies**:
+```bash
+npm install
 ```
 
-## Step 2: Build and run your app
+2. **Get your API Key**:
+   - Create a free account at [posetracker.com](https://posetracker.com)
+   - Copy your API key
+   - Replace `YOUR_POSETRACKER_API_KEY_HERE` in `App.tsx` (line 14)
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+3. **Install iOS dependencies** (macOS only):
+```bash
+cd ios
+pod install
+cd ..
+```
+
+## Running the App
 
 ### Android
 
-```sh
-# Using npm
-npm run android
-
-# OR using Yarn
-yarn android
+1. **Start Metro bundler**:
+```bash
+npm start
 ```
+
+2. **In a new terminal, run Android**:
+```bash
+npm run android
+```
+
+Or use the combined command:
+```bash
+npx react-native run-android
+```
+
+### iOS (macOS only)
+
+1. **Start Metro bundler**:
+```bash
+npm start
+```
+
+2. **In a new terminal, run iOS**:
+```bash
+npm run ios
+```
+
+Or use the combined command:
+```bash
+npx react-native run-ios
+```
+
+## Configuration
+
+### Change Exercise Settings
+
+In `App.tsx`, you can customize:
+
+```typescript
+const exercise = 'squat';    // Exercise type
+const difficulty = 'easy';   // Difficulty level
+```
+
+### API Configuration
+
+The app connects to PoseTracker using:
+```typescript
+const API_KEY = 'YOUR_POSETRACKER_API_KEY_HERE';
+const POSETRACKER_API = 'https://app.posetracker.com/pose_tracker/tracking';
+```
+
+## Project Structure
+
+```
+PoseTrackerCLI/
+├── App.tsx                    # Main application file
+├── android/                   # Android native code
+│   └── app/src/main/
+│       └── AndroidManifest.xml # Android permissions
+├── ios/                       # iOS native code
+│   └── PoseTrackerCLI/
+│       └── Info.plist         # iOS permissions
+├── package.json               # Dependencies
+└── README.md                  # This file
+```
+
+## Permissions
+
+### Android
+The following permissions are configured in `AndroidManifest.xml`:
+- `CAMERA` - For camera access
+- `INTERNET` - For API communication
 
 ### iOS
+Camera permission is configured in `Info.plist`:
+- `NSCameraUsageDescription` - Explains why camera access is needed
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+## How It Works
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+1. **Permission Request**: App requests camera permission on launch
+2. **WebView Loading**: WebView loads PoseTracker API endpoint
+3. **Camera Access**: Camera feed is accessed through WebView
+4. **Real-time Analysis**: PoseTracker analyzes the video stream
+5. **Data Bridge**: JavaScript bridge communicates pose data back to React Native
+6. **UI Update**: Status, counter, and feedback are displayed
 
-```sh
-bundle install
+## Dependencies
+
+### Core Dependencies
+- `react` (19.1.1)
+- `react-native` (0.82.0)
+- `react-native-webview` (^13.16.0) - WebView for PoseTracker integration
+- `react-native-permissions` (^5.4.2) - Camera permission handling
+- `react-native-safe-area-context` (^5.5.2) - Safe area support
+
+## Troubleshooting
+
+### Metro Bundler Issues
+```bash
+# Clear cache and restart
+npm start -- --reset-cache
 ```
 
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
+### Android Build Errors
+```bash
+# Clean and rebuild
+cd android
+./gradlew clean
+cd ..
+npx react-native run-android
 ```
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
+### iOS Build Errors
+```bash
+# Clean build folder
+cd ios
+rm -rf Pods Podfile.lock
+pod install
+cd ..
+npx react-native run-ios
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+### Camera Permission Not Working
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+**Android**:
+- Check `AndroidManifest.xml` has camera permissions
+- Manually grant permission in device settings
 
-## Step 3: Modify your app
+**iOS**:
+- Check `Info.plist` has `NSCameraUsageDescription`
+- Reset permissions in device settings
 
-Now that you have successfully run the app, let's make changes!
+### WebView Not Loading
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+Check:
+1. Internet connection
+2. API key is valid
+3. Console logs for errors
+4. Try reloading the app (shake device → Reload)
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+## Console Logs
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+The app logs important events to help with debugging:
+- `WebView loading started`
+- `WebView loading completed`
+- `Bridge injected successfully`
+- `Permission request: camera`
+- `Received infos: {...}`
+- `Parsed data: {...}`
 
-## Congratulations! :tada:
+**To view logs**:
 
-You've successfully run and modified your React Native App. :partying_face:
+Android:
+```bash
+npx react-native log-android
+```
 
-### Now what?
+iOS:
+```bash
+npx react-native log-ios
+```
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+## Development
 
-# Troubleshooting
+### Enable TypeScript Strict Mode
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+In `tsconfig.json`, enable strict mode for better type safety:
+```json
+{
+  "compilerOptions": {
+    "strict": true
+  }
+}
+```
 
-# Learn More
+### Debugging
 
-To learn more about React Native, take a look at the following resources:
+1. **React Native Debugger**:
+   - Shake device → "Debug"
+   - Opens Chrome DevTools
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+2. **Flipper** (Recommended):
+   - Install Flipper Desktop
+   - Automatic connection to running app
+   - View network requests, logs, layout
+
+## API Reference
+
+### PoseTracker Events
+
+The app receives the following event types from PoseTracker:
+
+- `initialization` - API initialization status
+- `posture` - Posture and placement feedback
+- `counter` - Repetition count updates
+- `error` - Error messages
+- `bridge_ready` - Bridge connection confirmed
+
+## Performance
+
+- Optimized for real-time tracking
+- Minimal UI overhead
+- Efficient WebView bridge communication
+
+## Known Limitations
+
+- Requires good lighting for accurate tracking
+- Front camera recommended
+- User must be fully visible in frame
+- Works best with plain background
+
+## Support
+
+For PoseTracker API questions:
+- Website: [posetracker.com](https://posetracker.com)
+- Documentation: Check PoseTracker docs
+
+For React Native issues:
+- React Native docs: [reactnative.dev](https://reactnative.dev)
+
+## License
+
+This project is provided as-is for integration with PoseTracker API.
+
+---
+
+**Happy tracking! 🚀🏋️**
