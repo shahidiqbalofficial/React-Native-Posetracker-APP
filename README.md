@@ -2,7 +2,8 @@
 This is a React Native CLI project for integrating the [PoseTracker API](https://posetracker.com) to track exercises and count repetitions in real-time.
 
 https://github.com/user-attachments/assets/c4265eca-98d6-48ac-ac2c-84187809ec5a
-
+short Demo:
+https://github.com/user-attachments/assets/115a308b-0162-4e52-bb93-f721e1cb68e9
 
 ## Features
 
